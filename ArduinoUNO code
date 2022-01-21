@@ -1,0 +1,155 @@
+double Voltage = 0;
+double Current = 0;
+
+double Voltage_2 = 0;
+double Current_2 = 0;
+
+double Voltage_3 = 0;
+double Current_3 = 0;
+
+String str;
+
+int buzzer = 4;
+
+void setup() {
+  pinMode(buzzer, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(6, OUTPUT);
+  pinMode(7, OUTPUT);
+
+  digitalWrite(buzzer, HIGH);
+  delay(500);
+  digitalWrite(buzzer, LOW);
+  delay(50);
+  digitalWrite(buzzer, HIGH);
+  delay(300);
+  digitalWrite(buzzer, LOW);
+  delay(50);
+  digitalWrite(buzzer, HIGH);
+  delay(200);
+  digitalWrite(buzzer, LOW);
+  delay(10);
+
+  Serial.begin(9600); // initialize serial
+}
+void loop()
+{ current_1 ();
+  current_2 ();
+  current_3 ();
+  Send_to_NodeMCU ();
+
+}
+
+
+void current_1 ()
+{
+  // Voltage is Sensed 1000 Times for precision
+  for (int i = 0; i < 1000; i++) {
+    Voltage = (Voltage + (.0049 * analogRead(A1)));   // (5 V / 1024 (Analog) = 0.0049) which converter Measured analog input voltage to 5 V Range
+
+    //delay(1);
+  }
+  Voltage = Voltage / 1000;
+
+  Current = (Voltage - 2.46) / 0.185;                  // Sensed voltage is converter to current
+  if (Current > 0)
+  { // Serial.println("not Fault");
+    digitalWrite(5, LOW);
+    //   Send_to_NodeMCU_1 ();
+  }
+  else if (Current < 0)
+  { //Serial.println("Fault");
+    digitalWrite(5, HIGH);
+  }
+  //  Serial.print("\n Voltage Sensed (V) = ");            // shows the measured voltage
+  //  Serial.print(Voltage, 2);                            // the '2' after voltage allows you to display 2 digits after decimal point
+  //  Serial.print("\t Current (A) = ");                   // shows the voltage measured
+  //  Serial.print(Current, 2);                            // the '2' after voltage allows you to display 2 digits after decimal point
+}
+
+
+void current_2 ()
+{
+  // Voltage is Sensed 1000 Times for precision
+  for (int i = 0; i < 1000; i++) {
+    Voltage_2 = (Voltage_2 + (.0049 * analogRead(A2)));   // (5 V / 1024 (Analog) = 0.0049) which converter Measured analog input voltage to 5 V Range
+    //  delay(1);
+  }
+  Voltage_2 = Voltage_2 / 1000;
+
+  Current_2 = (Voltage_2 - 2.43) / 0.185;                  // Sensed voltage is converter to current
+  Current_2 = Current_2 + 0.2;
+
+  if (Current_2 > 0)
+  { //Serial.println("not Fault_2");
+    digitalWrite(7, LOW);
+    //   Send_to_NodeMCU_2 ();
+  }
+
+  else if (Current_2 < 0)
+  { //Serial.println("Fault_2");
+    digitalWrite(7, HIGH);
+  }
+  //  //    Serial.print("\n Voltage Sensed_2 (V) = ");            // shows the measured voltage
+  //  //    Serial.print(Voltage_2, 2);                            // the '2' after voltage allows you to display 2 digits after decimal point
+  //  //    Serial.print("\t Current_2 (A) = ");                   // shows the voltage measured
+  //  //    Serial.print(Current_2, 2);                            // the '2' after voltage allows you to display 2 digits after decimal point
+  //  //  delay(1000);
+}
+
+
+
+void current_3 () {
+  // Voltage is Sensed 1000 Times for precision
+  for (int i = 0; i < 1000; i++) {
+    Voltage_3 = (Voltage_3 + (.0049 * analogRead(A3)));   // (5 V / 1024 (Analog) = 0.0049) which converter Measured analog input voltage to 5 V Range
+    //  delay(1);
+  }
+  Voltage_3 = Voltage_3 / 1000;
+
+  Current_3 = (Voltage_3 - 2.48) / 0.185;                  // Sensed voltage is converter to current
+  Current_3 = Current_3 + 0.4;
+
+  if (Current_3 > 0)
+  { //Serial.println("not Fault_3");
+    digitalWrite(6, LOW);
+    //  Send_to_NodeMCU_3 ();
+  }
+
+  else if (Current_3 < 0)
+  { //Serial.println("Fault_3");
+    digitalWrite(6, HIGH);
+  }
+
+  //  //    Serial.print("\n Voltage Sensed_3 (V) = ");            // shows the measured voltage
+  //  //    Serial.print(Voltage_3, 2);                            // the '2' after voltage allows you to display 2 digits after decimal point
+  //  //    Serial.print("\t Current_3 (A) = ");                   // shows the voltage measured
+  //  //    Serial.print(Current_3, 2);                            // the '2' after voltage allows you to display 2 digits after decimal point
+  //  //  delay(1000);
+}
+
+void Send_to_NodeMCU ()
+{ str = str + Current + "," + Current_2 + "," + Current_3 + ",";
+  Serial.println(str);
+  delay(1000);
+  str = "";
+}
+
+//void Send_to_NodeMCU_1 ()
+//{ str = str + Current;
+//  Serial.println("");
+//  Serial.println(str);
+//  str = "";
+//}
+//void Send_to_NodeMCU_2 ()
+//{ str = str + Current_2;
+//  Serial.println("");
+//  Serial.println(str);
+//  str = "";
+//}
+//void Send_to_NodeMCU_3 ()
+//{ str = str + Current_3;
+//  Serial.println("");
+//  Serial.println(str);
+//  str = "";
+//}
